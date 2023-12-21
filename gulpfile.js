@@ -16,7 +16,6 @@ gulp.task('sass', () => {
   return gulp.src('./css/sass/**/*.scss')
     .pipe(sassCompiler().on('error', sassCompiler.logError))
     .pipe(gulp.dest('./css'))
-    // .pipe(reload({ stream: true }));
     .pipe(browserSync.stream());
 });
 
@@ -37,6 +36,7 @@ gulp.task('serveBuild', gulp.series('sass', () => {
         baseDir: 'dist/',
       },
     });
+    gulp.watch(['./index.html', './css/sass/**/*.scss', './js/**/*.js', './img/**/*'], gulp.series('inject')).on('change', reload);
 }));
 
 
@@ -75,6 +75,4 @@ gulp.task('inject', gulp.series('styles', 'scripts', 'images', () => {
     .pipe(gulp.dest('./dist'));
 }));
 
-gulp.task('build', gulp.series('inject', 'serveBuild', () => {
-  gulp.watch(['./index.html', './css/sass/**/*.scss', './js/**/*.js', './img/**/*'], gulp.series('inject')).on('build', reload);
-}));
+gulp.task('build', gulp.series('inject', 'serveBuild'));
